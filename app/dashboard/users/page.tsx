@@ -260,7 +260,7 @@ export default function UsersPage() {
           message.success("User Editted Successfully");
           setId("");
           setEdit(false);
-          getUsersList();
+          getUsersList("");
         } else {
           setIsLoading(false);
           res?.errors?.forEach((err: any) => {
