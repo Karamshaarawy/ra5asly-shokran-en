@@ -208,19 +208,22 @@ export default function CarLicenses() {
     }
     setIsLoading(true);
     GetReq(url).then((res) => {
-      console.log(res);
       if (StatusSuccessCodes.includes(res?.status)) {
         setData(res?.data?.results);
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        message.error(`${res.detail} `);
+        for (let key in res) {
+          message.open({
+            type: "error",
+            content: res[key][0],
+          });
+        }
       }
     });
   }
 
   function search(values: any) {
-    console.log(values);
     getData(values);
   }
 
@@ -237,6 +240,7 @@ export default function CarLicenses() {
         </Suspense>
         <div className="w-full max-h-screen overflow-x-scroll lg:overflow-x-auto md:overflow-x-scroll sm:overflow-x-scroll">
           <Table
+            loading={isLoading}
             rowKey={"id"}
             scroll={{ x: 0 }}
             columns={columns}
@@ -257,8 +261,14 @@ function Search(props: any) {
   const pathname = usePathname();
   const { RangePicker } = DatePicker;
 
+  const onReset = () => {
+    searchForm.resetFields();
+    params.forEach((value, key) => params.delete(`${key}`));
+    replace(`${pathname}`);
+    getData(params);
+  };
+
   function onFinish(values: any) {
-    console.log(values);
     let from_date = 0;
     let to_date = 0;
     if (values.date) {
@@ -266,8 +276,6 @@ function Search(props: any) {
       to_date = Date.parse(values.date[1]);
       params.set("from_date", from_date.toString());
       params.set("to_date", to_date.toString());
-      console.log(from_date);
-      console.log(to_date);
     } else {
       params.delete("from_date");
       params.delete("to_date");
@@ -309,12 +317,6 @@ function Search(props: any) {
     getData(params);
   }
 
-  const onReset = () => {
-    searchForm.resetFields();
-    params.forEach((value, key) => params.delete(`${key}`));
-    replace(`${pathname}`);
-    getData(params);
-  };
   return (
     <Form
       form={searchForm}
@@ -356,7 +358,7 @@ function Search(props: any) {
       <Form.Item name="status" className="w-[100%]">
         <Select placeholder="Status" className="h-[50px]">
           , PENDING, DONE, REJECTED
-          <Select.Option key="WAITINGAPPROVAL" value="WAITINGAPPROVAL">
+          <Select.Option key="WAITINGAPPROVAL" value="WAITING_APPROVAL">
             Waiting Approval
           </Select.Option>
           <Select.Option key="PENDING" value="PENDING">

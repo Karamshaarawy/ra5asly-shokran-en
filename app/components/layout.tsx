@@ -139,6 +139,9 @@ export default function AppLayout({ children }: LayoutProviderProps) {
                 height={45}
               />
             </Link>
+            <h3 className=" ml-2 flex justify-start py-2 text-left w-full text-3xl font-bold">
+              Ra5asly Shokran
+            </h3>
           </Header>
           <Header className=" bg-white flex flex-row items-center h-[64px] py-[2px]">
             <Menu

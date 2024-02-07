@@ -4,15 +4,18 @@ import { StatusSuccessCodes } from "../../api/successStatus";
 import {
   Button,
   Checkbox,
+  DatePicker,
   Form,
   Input,
   Modal,
   Popconfirm,
+  Select,
   Table,
   message,
 } from "antd/lib";
 import { ColumnsType } from "antd/lib/table";
-import { Fragment, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Fragment, Suspense, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { MdModeEditOutline } from "react-icons/md";
 
@@ -185,12 +188,16 @@ export default function UsersPage() {
   ];
 
   useEffect(() => {
-    getUsersList();
+    getUsersList("");
   }, []);
 
-  function getUsersList() {
+  function getUsersList(values: any) {
+    let url = `users/?`;
+    if (typeof values !== "string") {
+      values.forEach((value: any, key: any) => (url += `&${key}=${value}`));
+    }
     setIsLoading(true);
-    GetReq("users/").then((res) => {
+    GetReq(url).then((res) => {
       if (StatusSuccessCodes.includes(res?.status)) {
         setUsersList(res?.data?.results);
         setIsLoading(false);
@@ -265,7 +272,7 @@ export default function UsersPage() {
       PostReq(`users/`, values).then((res) => {
         if (StatusSuccessCodes.includes(res.status)) {
           message.success("User Added Successfully");
-          getUsersList();
+          getUsersList("");
           setIsLoading(false);
           setIsModalOpen(false);
         } else {
@@ -284,7 +291,9 @@ export default function UsersPage() {
     setEdit(false);
     setId("");
   }
-
+  function search(values: any) {
+    getUsersList(values);
+  }
   return (
     <Fragment>
       <div className="bg-[#f1f5f9] border rounded-lg shadow-sm p-5">
@@ -304,7 +313,9 @@ export default function UsersPage() {
             Add User
           </Button>
         </div>
-
+        <Suspense>
+          <Search getData={search} />
+        </Suspense>
         <div className="w-full max-h-screen overflow-x-scroll lg:overflow-x-auto md:overflow-x-scroll sm:overflow-x-scroll">
           <Table
             dataSource={usersList}
@@ -415,5 +426,155 @@ export default function UsersPage() {
         </Modal>
       </div>
     </Fragment>
+  );
+}
+
+function Search(props: any) {
+  const getData = props.getData;
+  const searchParams = useSearchParams();
+  const [searchForm] = Form.useForm();
+  const params = new URLSearchParams(searchParams);
+  const { replace } = useRouter();
+  const pathname = usePathname();
+  // const { RangePicker } = DatePicker;
+
+  const onReset = () => {
+    searchForm.resetFields();
+    params.forEach((value, key) => params.delete(`${key}`));
+    replace(`${pathname}`);
+    getData(params);
+  };
+
+  function onFinish(values: any) {
+    // let from_date = 0;
+    // let to_date = 0;
+    // if (values.date) {
+    //   from_date = Date.parse(values.date[0]);
+    //   to_date = Date.parse(values.date[1]);
+    //   params.set("from_date", from_date.toString());
+    //   params.set("to_date", to_date.toString());
+    // } else {
+    //   params.delete("from_date");
+    //   params.delete("to_date");
+    // }
+    if (values.search) {
+      params.set("search", values.search);
+    } else {
+      params.delete("search");
+    }
+
+    if (values.is_active) {
+      params.set("is_active", values.is_active);
+    } else {
+      params.delete("is_active");
+    }
+    if (values.is_staff) {
+      params.set("is_staff", values.is_staff);
+    } else {
+      params.delete("is_staff");
+    }
+
+    // if (values.vip_assistance) {
+    //   params.set("vip_assistance", values.vip_assistance);
+    // } else {
+    //   params.delete("vip_assistance");
+    // }
+
+    replace(`${pathname}?${params.toString()}`);
+    getData(params);
+  }
+  return (
+    <Form
+      form={searchForm}
+      className={
+        "gap-3 mb-5 items-baseline flex flex-col md:flex-row lg:flex-row"
+      }
+      onFinish={onFinish}
+      // layout="inline"
+    >
+      <Form.Item
+        name="search"
+        className="w-[100%]"
+        rules={[
+          {
+            validator(_, value) {
+              const spaceStart = value?.startsWith(" ");
+              const spaceEnd = value?.endsWith(" ");
+              if (spaceStart) {
+                return Promise.reject("Must not starts with space");
+              } else if (spaceEnd) {
+                return Promise.reject("Must not ended with space");
+              } else {
+                return Promise.resolve();
+              }
+            },
+          },
+        ]}
+      >
+        <Input
+          type="text"
+          id="name"
+          placeholder="search . . ."
+          className="h-[50px]"
+        />
+      </Form.Item>
+      {/* <Form.Item className="w-[100%]" name="date">
+        <RangePicker className="h-[50px]" format={"MM-DD-YYYY"} />
+      </Form.Item> */}
+      <Form.Item name="is_active" className="w-[100%]">
+        <Select placeholder="Status" className="h-[50px]">
+          <Select.Option key="active" value="true">
+            Active
+          </Select.Option>
+          <Select.Option key="inactive" value="false">
+            InActive
+          </Select.Option>
+        </Select>
+      </Form.Item>
+
+      <Form.Item className="w-[100%]" name="is_staff">
+        <Select placeholder="Staff" className="h-[50px]">
+          <Select.Option key="yes" value="true">
+            Yes
+          </Select.Option>
+          <Select.Option key="no" value="false">
+            No
+          </Select.Option>
+        </Select>
+      </Form.Item>
+      {/* <Form.Item className="w-[100%]" name="installment">
+        <Select placeholder="Installment" className="h-[50px]">
+          <Select.Option key="yes" value="true">
+            Yes
+          </Select.Option>
+          <Select.Option key="no" value="false">
+            No
+          </Select.Option>
+        </Select>
+      </Form.Item> */}
+
+      <div className="flex flex-row gap-5 justify-between">
+        <Button
+          size={"large"}
+          htmlType="submit"
+          shape="round"
+          style={{ background: "#f1f5f9" }}
+          className="font-semibold flex items-center "
+        >
+          Apply
+        </Button>
+        <Button
+          size={"large"}
+          type="default"
+          htmlType="button"
+          onClick={onReset}
+          shape="round"
+          style={{ background: "#f1f5f9" }}
+          className="font-semibold flex items-center "
+        >
+          Reset
+        </Button>
+      </div>
+    </Form>
   );
 }
