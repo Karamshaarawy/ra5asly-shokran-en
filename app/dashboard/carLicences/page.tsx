@@ -13,18 +13,12 @@ import {
 } from "antd/lib";
 import Table, { ColumnsType } from "antd/lib/table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa6";
 
 export default function CarLicenses() {
-  const searchParams = useSearchParams();
-  const [searchForm] = Form.useForm();
-  const params = new URLSearchParams(searchParams);
-  const { replace } = useRouter();
-  const pathname = usePathname();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<any[] | []>([]);
-  const { RangePicker } = DatePicker;
 
   const columns: ColumnsType<any> = [
     {
@@ -209,7 +203,7 @@ export default function CarLicenses() {
 
   function getData() {
     let url = `car-license/?`;
-    params.forEach((value, key) => (url += `&${key}=${value}`));
+    // params.forEach((value, key) => (url += `&${key}=${value}`));
     setIsLoading(true);
     GetReq(url).then((res) => {
       console.log(res);
@@ -223,12 +217,37 @@ export default function CarLicenses() {
     });
   }
 
-  const onReset = () => {
-    searchForm.resetFields();
-    params.forEach((value, key) => params.delete(`${key}`));
-    replace(`${pathname}`);
-    getData();
-  };
+  return (
+    <div>
+      <div>
+        <div>
+          <h3 className="flex justify-start py-5 text-left w-full text-3xl font-bold">
+            Car Licenses
+          </h3>
+        </div>
+        <Suspense>
+          <Search />
+        </Suspense>
+        <div className="w-full max-h-screen overflow-x-scroll lg:overflow-x-auto md:overflow-x-scroll sm:overflow-x-scroll">
+          <Table
+            rowKey={"id"}
+            scroll={{ x: 0 }}
+            columns={columns}
+            dataSource={data}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Search() {
+  const searchParams = useSearchParams();
+  const [searchForm] = Form.useForm();
+  const params = new URLSearchParams(searchParams);
+  const { replace } = useRouter();
+  const pathname = usePathname();
+  const { RangePicker } = DatePicker;
 
   function onFinish(values: any) {
     console.log(values);
@@ -279,147 +298,135 @@ export default function CarLicenses() {
     }
 
     replace(`${pathname}?${params.toString()}`);
-    getData();
+    // getData();
   }
 
+  const onReset = () => {
+    searchForm.resetFields();
+    params.forEach((value, key) => params.delete(`${key}`));
+    replace(`${pathname}`);
+    // getData();
+  };
   return (
-    <div>
-      <div>
-        <div>
-          <h3 className="flex justify-start py-5 text-left w-full text-3xl font-bold">
-            Car Licenses
-          </h3>
-        </div>
+    <Form
+      form={searchForm}
+      className={
+        "gap-3 mb-5 items-baseline flex flex-col md:flex-row lg:flex-row"
+      }
+      onFinish={onFinish}
+      // layout="inline"
+    >
+      <Form.Item
+        name="search"
+        className="w-[100%]"
+        rules={[
+          {
+            validator(_, value) {
+              const spaceStart = value?.startsWith(" ");
+              const spaceEnd = value?.endsWith(" ");
+              if (spaceStart) {
+                return Promise.reject("Must not starts with space");
+              } else if (spaceEnd) {
+                return Promise.reject("Must not ended with space");
+              } else {
+                return Promise.resolve();
+              }
+            },
+          },
+        ]}
+      >
+        <Input
+          type="text"
+          id="name"
+          placeholder="search . . ."
+          className="h-[50px]"
+        />
+      </Form.Item>
+      <Form.Item className="w-[100%]" name="date">
+        <RangePicker className="h-[50px]" format={"MM-DD-YYYY"} />
+      </Form.Item>
+      <Form.Item name="status" className="w-[100%]">
+        <Select placeholder="Status" className="h-[50px]">
+          , PENDING, DONE, REJECTED
+          <Select.Option key="WAITINGAPPROVAL" value="WAITINGAPPROVAL">
+            Waiting Approval
+          </Select.Option>
+          <Select.Option key="PENDING" value="PENDING">
+            Pending
+          </Select.Option>
+          <Select.Option key="DONE" value="DONE">
+            Done
+          </Select.Option>
+          <Select.Option key="REJECTED" value="REJECTED">
+            Rejected
+          </Select.Option>
+        </Select>
+      </Form.Item>
 
-        <Form
-          form={searchForm}
-          className={
-            "gap-3 mb-5 items-baseline flex flex-col md:flex-row lg:flex-row"
-          }
-          onFinish={onFinish}
-          // layout="inline"
+      <Form.Item className="w-[100%]" name="vip_assistance">
+        <Select placeholder="VIP Assistance" className="h-[50px]">
+          <Select.Option key="yes" value="true">
+            Yes
+          </Select.Option>
+          <Select.Option key="no" value="false">
+            No
+          </Select.Option>
+        </Select>
+      </Form.Item>
+
+      <Form.Item className="w-[100%]" name="needs_check">
+        <Select placeholder="Needs Check" className="h-[50px]">
+          <Select.Option key="yes" value="true">
+            Yes
+          </Select.Option>
+          <Select.Option key="no" value="false">
+            No
+          </Select.Option>
+        </Select>
+      </Form.Item>
+      <Form.Item className="w-[100%]" name="is_new_car">
+        <Select placeholder="New Car" className="h-[50px]">
+          <Select.Option key="yes" value="true">
+            Yes
+          </Select.Option>
+          <Select.Option key="no" value="false">
+            No
+          </Select.Option>
+        </Select>
+      </Form.Item>
+      <Form.Item className="w-[100%]" name="installment">
+        <Select placeholder="Installment" className="h-[50px]">
+          <Select.Option key="yes" value="true">
+            Yes
+          </Select.Option>
+          <Select.Option key="no" value="false">
+            No
+          </Select.Option>
+        </Select>
+      </Form.Item>
+
+      <div className="flex flex-row gap-5 justify-between">
+        <Button
+          size={"large"}
+          htmlType="submit"
+          shape="round"
+          style={{ background: "#f1f5f9" }}
+          className="font-semibold flex items-center "
         >
-          <Form.Item
-            name="search"
-            className="w-[100%]"
-            rules={[
-              {
-                validator(_, value) {
-                  const spaceStart = value?.startsWith(" ");
-                  const spaceEnd = value?.endsWith(" ");
-                  if (spaceStart) {
-                    return Promise.reject("Must not starts with space");
-                  } else if (spaceEnd) {
-                    return Promise.reject("Must not ended with space");
-                  } else {
-                    return Promise.resolve();
-                  }
-                },
-              },
-            ]}
-          >
-            <Input
-              type="text"
-              id="name"
-              placeholder="search . . ."
-              className="h-[50px]"
-            />
-          </Form.Item>
-          <Form.Item className="w-[100%]" name="date">
-            <RangePicker className="h-[50px]" format={"MM-DD-YYYY"} />
-          </Form.Item>
-          <Form.Item name="status" className="w-[100%]">
-            <Select placeholder="Status" className="h-[50px]">
-              , PENDING, DONE, REJECTED
-              <Select.Option key="WAITINGAPPROVAL" value="WAITINGAPPROVAL">
-                Waiting Approval
-              </Select.Option>
-              <Select.Option key="PENDING" value="PENDING">
-                Pending
-              </Select.Option>
-              <Select.Option key="DONE" value="DONE">
-                Done
-              </Select.Option>
-              <Select.Option key="REJECTED" value="REJECTED">
-                Rejected
-              </Select.Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item className="w-[100%]" name="vip_assistance">
-            <Select placeholder="VIP Assistance" className="h-[50px]">
-              <Select.Option key="yes" value="true">
-                Yes
-              </Select.Option>
-              <Select.Option key="no" value="false">
-                No
-              </Select.Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item className="w-[100%]" name="needs_check">
-            <Select placeholder="Needs Check" className="h-[50px]">
-              <Select.Option key="yes" value="true">
-                Yes
-              </Select.Option>
-              <Select.Option key="no" value="false">
-                No
-              </Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item className="w-[100%]" name="is_new_car">
-            <Select placeholder="New Car" className="h-[50px]">
-              <Select.Option key="yes" value="true">
-                Yes
-              </Select.Option>
-              <Select.Option key="no" value="false">
-                No
-              </Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item className="w-[100%]" name="installment">
-            <Select placeholder="Installment" className="h-[50px]">
-              <Select.Option key="yes" value="true">
-                Yes
-              </Select.Option>
-              <Select.Option key="no" value="false">
-                No
-              </Select.Option>
-            </Select>
-          </Form.Item>
-
-          <div className="flex flex-row gap-5 justify-between">
-            <Button
-              size={"large"}
-              htmlType="submit"
-              shape="round"
-              style={{ background: "#f1f5f9" }}
-              className="font-semibold flex items-center "
-            >
-              Apply
-            </Button>
-            <Button
-              size={"large"}
-              shape="round"
-              type="default"
-              htmlType="button"
-              onClick={onReset}
-              style={{ background: "#f1f5f9" }}
-              className="font-semibold flex items-center "
-            >
-              Reset
-            </Button>
-          </div>
-        </Form>
-        <div className="w-full max-h-screen overflow-x-scroll lg:overflow-x-auto md:overflow-x-scroll sm:overflow-x-scroll">
-          <Table
-            rowKey={"id"}
-            scroll={{ x: 0 }}
-            columns={columns}
-            dataSource={data}
-          />
-        </div>
+          Apply
+        </Button>
+        <Button
+          size={"large"}
+          shape="round"
+          type="default"
+          htmlType="button"
+          onClick={onReset}
+          style={{ background: "#f1f5f9" }}
+          className="font-semibold flex items-center "
+        >
+          Reset
+        </Button>
       </div>
-    </div>
+    </Form>
   );
 }
