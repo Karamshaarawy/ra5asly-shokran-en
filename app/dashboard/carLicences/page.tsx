@@ -56,7 +56,7 @@ export default function CarLicenses() {
     {
       title: "Status",
       key: "status",
-      dataIndex: "status",
+      render: (_, { status }) => (status ? status.replace("_", " ") : "-"),
     },
     {
       title: "Needs Check",

@@ -64,6 +64,7 @@ export default function DriverLicenses() {
       title: "Status",
       key: "status",
       dataIndex: "status",
+      render: (_, { status }) => (status ? status.replace("_", " ") : "-"),
     },
 
     {
