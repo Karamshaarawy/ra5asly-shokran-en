@@ -198,12 +198,14 @@ export default function CarLicenses() {
     });
   }
   useEffect(() => {
-    getData();
+    getData("");
   }, []);
 
-  function getData() {
+  function getData(values: any) {
     let url = `car-license/?`;
-    // params.forEach((value, key) => (url += `&${key}=${value}`));
+    if (typeof values !== "string") {
+      values.forEach((value: any, key: any) => (url += `&${key}=${value}`));
+    }
     setIsLoading(true);
     GetReq(url).then((res) => {
       console.log(res);
@@ -217,6 +219,11 @@ export default function CarLicenses() {
     });
   }
 
+  function search(values: any) {
+    console.log(values);
+    getData(values);
+  }
+
   return (
     <div>
       <div>
@@ -226,7 +233,7 @@ export default function CarLicenses() {
           </h3>
         </div>
         <Suspense>
-          <Search />
+          <Search getData={search} />
         </Suspense>
         <div className="w-full max-h-screen overflow-x-scroll lg:overflow-x-auto md:overflow-x-scroll sm:overflow-x-scroll">
           <Table
@@ -241,7 +248,8 @@ export default function CarLicenses() {
   );
 }
 
-function Search() {
+function Search(props: any) {
+  const getData = props.getData;
   const searchParams = useSearchParams();
   const [searchForm] = Form.useForm();
   const params = new URLSearchParams(searchParams);
@@ -298,14 +306,14 @@ function Search() {
     }
 
     replace(`${pathname}?${params.toString()}`);
-    // getData();
+    getData(params);
   }
 
   const onReset = () => {
     searchForm.resetFields();
     params.forEach((value, key) => params.delete(`${key}`));
     replace(`${pathname}`);
-    // getData();
+    getData(params);
   };
   return (
     <Form
