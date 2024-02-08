@@ -214,7 +214,7 @@ export default function DriverLicenses() {
     <div>
       <div className="bg-[#f1f5f9] border rounded-lg shadow-sm p-5">
         <div>
-          <h3 className="flex justify-start py-5 text-left w-full text-3xl font-bold">
+          <h3 className="flex justify-start text-black py-5 text-left w-full text-3xl font-bold">
             {"Driever's License"}
           </h3>
         </div>

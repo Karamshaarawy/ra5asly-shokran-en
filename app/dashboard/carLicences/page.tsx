@@ -231,7 +231,7 @@ export default function CarLicenses() {
     <div>
       <div>
         <div>
-          <h3 className="flex justify-start py-5 text-left w-full text-3xl font-bold">
+          <h3 className="flex justify-start py-5 text-black text-left w-full text-3xl font-bold">
             Car Licenses
           </h3>
         </div>

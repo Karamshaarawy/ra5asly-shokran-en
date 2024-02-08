@@ -312,7 +312,7 @@ export default function Govs() {
   return (
     <div className="bg-[#f1f5f9] border rounded-lg shadow-sm p-5">
       <div>
-        <h3 className="flex justify-start py-2 text-left w-full text-3xl font-bold">
+        <h3 className="flex text-black justify-start py-2 text-left w-full text-3xl font-bold">
           Governorates & Licensing Units
         </h3>
       </div>
@@ -360,10 +360,10 @@ export default function Govs() {
           <div className="grid grid-cols-1 gap-5">
             <Form.Item
               name="name"
-              label=":المحافظة"
+              label="Governorate:"
               rules={[{ required: true }, { type: "string" }]}
             >
-              <Input placeholder="المحافظة" autoComplete="off" />
+              <Input placeholder="Governorate" autoComplete="off" />
             </Form.Item>
           </div>
           <div className="flex justify-end  ">
@@ -398,18 +398,18 @@ export default function Govs() {
           <div className="grid grid-cols-2 gap-5">
             <Form.Item
               name="name"
-              label=":اسم الوحدة"
+              label="Unit Name:"
               rules={[{ required: true }]}
             >
-              <Input placeholder="اسم الوحدة" autoComplete="off" />
+              <Input placeholder="Unit Name" autoComplete="off" />
             </Form.Item>
 
             <Form.Item
               name="governorate"
-              label="المحافظة:"
+              label="Governorate:"
               rules={[{ required: true }]}
             >
-              <Select placeholder="اختر محافظة">{govsList}</Select>
+              <Select placeholder="Choose Governorate">{govsList}</Select>
             </Form.Item>
           </div>
           <div className="flex justify-end  ">

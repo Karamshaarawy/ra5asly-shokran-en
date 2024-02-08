@@ -298,7 +298,7 @@ export default function UsersPage() {
     <Fragment>
       <div className="bg-[#f1f5f9] border rounded-lg shadow-sm p-5">
         <div id="title ">
-          <h3 className="flex justify-start py-2 text-left w-full text-3xl font-bold">
+          <h3 className="flex justify-start py-2 text-left w-full text-black text-3xl font-bold">
             Users
           </h3>
         </div>
