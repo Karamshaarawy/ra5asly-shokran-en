@@ -1,5 +1,6 @@
 "use client";
-import { DeleteReq, GetReq } from "../../api/api";
+import { Modal } from "antd";
+import { DeleteReq, GetReq, PatchReq } from "../../api/api";
 import { StatusSuccessCodes } from "../../api/successStatus";
 import { DatePicker } from "antd/lib";
 import {
@@ -15,24 +16,27 @@ import Table, { ColumnsType } from "antd/lib/table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa6";
+import { MdModeEditOutline } from "react-icons/md";
+import TextArea from "antd/lib/input/TextArea";
 
 export default function DriverLicenses() {
+  const [id, setId] = useState<any>("");
+
+  const [userForm] = Form.useForm();
   const [searchForm] = Form.useForm();
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
   const { replace } = useRouter();
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<any[] | []>([]);
   const { RangePicker } = DatePicker;
-  // const searchParams = useSearchParams();
-  // const params = new URLSearchParams(searchParams);
 
   const columns: ColumnsType<any> = [
     {
       title: "User",
       key: "user",
-      dataIndex: "user",
-      render: (_, { user }) => (user ? user : "-"),
+      dataIndex: ["user", "username"],
     },
     {
       title: "Created At",
@@ -143,7 +147,25 @@ export default function DriverLicenses() {
       key: "rating",
       dataIndex: "rating",
     },
-
+    {
+      title: "Notes",
+      key: "notes",
+      dataIndex: "notes",
+    },
+    {
+      title: "Edit",
+      key: "edit",
+      render: (_: {}, record: { id: number }) => (
+        <MdModeEditOutline
+          onClick={() => {
+            editRowHandler(record);
+          }}
+          className="cursor-pointer text-sky-600"
+          size={24}
+          color="rgb(34, 197, 94)"
+        />
+      ),
+    },
     {
       title: "Delete",
       key: "delete",
@@ -166,6 +188,12 @@ export default function DriverLicenses() {
       ),
     },
   ];
+
+  function editRowHandler(record: any) {
+    setIsEditModalOpen(true);
+    userForm.setFieldsValue({ status: record.status, price: record.price });
+    setId(record.id);
+  }
 
   function deleteRowHandler(record: any) {
     setIsLoading(true);
@@ -210,6 +238,33 @@ export default function DriverLicenses() {
   function search(values: any) {
     getData(values);
   }
+
+  function closeModal() {
+    userForm.resetFields();
+    setIsEditModalOpen(false);
+    setId("");
+  }
+
+  function editLicense(values: any) {
+    PatchReq(`driver-license/${id}/`, values).then((res) => {
+      if (StatusSuccessCodes.includes(res?.status)) {
+        message.success("Updated Successfully");
+        setIsLoading(false);
+        getData("");
+        setIsEditModalOpen(false);
+        setId("");
+      } else {
+        setIsLoading(false);
+        for (let key in res) {
+          message.open({
+            type: "error",
+            content: res[key][0],
+          });
+        }
+      }
+    });
+  }
+
   return (
     <div>
       <div className="bg-[#f1f5f9] border rounded-lg shadow-sm p-5">
@@ -231,6 +286,65 @@ export default function DriverLicenses() {
           />
         </div>
       </div>
+      <Modal
+        title={"Edit"}
+        open={isEditModalOpen}
+        footer={null}
+        onCancel={closeModal}
+      >
+        <Form
+          autoComplete="off"
+          form={userForm}
+          layout="vertical"
+          onFinish={editLicense}
+        >
+          <div className="grid grid-cols-2 gap-5">
+            <Form.Item
+              name="status"
+              label="Status:"
+              rules={[{ required: true }]}
+            >
+              <Select placeholder="Status" className="h-[50px]">
+                <Select.Option key="WAITINGAPPROVAL" value="WAITING_APPROVAL">
+                  Waiting Approval
+                </Select.Option>
+                <Select.Option key="PENDING" value="PENDING">
+                  Pending
+                </Select.Option>
+                <Select.Option key="DONE" value="DONE">
+                  Done
+                </Select.Option>
+                <Select.Option key="REJECTED" value="REJECTED">
+                  Rejected
+                </Select.Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item name="price" label="price:" rules={[{ required: true }]}>
+              <Input className="h-[50px]" placeholder="price" type="number" />
+            </Form.Item>
+          </div>
+          <Form.Item name="notes" label="Notes:">
+            <TextArea placeholder="Notes" />
+          </Form.Item>
+
+          <div className="flex justify-end  ">
+            <Form.Item>
+              <Button
+                size={"large"}
+                shape="round"
+                className="mr-5"
+                htmlType="submit"
+              >
+                Apply
+              </Button>
+              <Button size={"large"} shape="round" onClick={closeModal}>
+                Cancel
+              </Button>
+            </Form.Item>
+          </div>
+        </Form>
+      </Modal>
     </div>
   );
 }
@@ -329,7 +443,6 @@ function Search(props: any) {
       </Form.Item>
       <Form.Item name="status" className="w-[100%]">
         <Select placeholder="Status" className="h-[50px]">
-          , PENDING, DONE, REJECTED
           <Select.Option key="WAITINGAPPROVAL" value="WAITING_APPROVAL">
             Waiting Approval
           </Select.Option>

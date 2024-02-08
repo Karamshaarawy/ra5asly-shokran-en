@@ -279,7 +279,6 @@ export default function Govs() {
   function getGovsList() {
     setIsLoading(true);
     GetReq("governorates/").then((res) => {
-      console.log(res.data);
       if (StatusSuccessCodes.includes(res?.status)) {
         setList(res?.data);
         setGovsList(

@@ -22,8 +22,8 @@ export default function LoginPage() {
     PostReq(`auth/login/`, values).then((res) => {
       if (StatusSuccessCodes.includes(res.status)) {
         localStorage.setItem("currentUser", JSON.stringify(res?.data));
+        router.push("../../dashboard/carLicences");
         setLoading(false);
-        router.push("../../dashboard");
       } else {
         setLoading(false);
         for (let key in res) {
@@ -51,7 +51,7 @@ export default function LoginPage() {
             /> */}
             </div>
             <div className="mt-8 text-4xl font-extrabold tracking-tight leading-tight">
-              Ra5asly Shokran.
+              Rakhasly Shokran.
               <br />
               Sign in
             </div>
@@ -83,18 +83,20 @@ export default function LoginPage() {
                   style={{ backgroundColor: "white", color: "black" }}
                 />
               </Form.Item>
-              <Form.Item>
+              <Form.Item className="flex flex-row justify-center">
                 {!isLoading ? (
                   <Button
-                    className="flex justify-center w-60"
+                    className="flex justify-center align-middle w-60"
                     type="primary"
+                    htmlType="submit"
                     shape="round"
                     size="large"
-                    htmlType="submit"
-                    style={{
-                      backgroundColor: "#20A7A0",
-                      borderColor: "#20A7A0",
-                    }}
+                    style={
+                      {
+                        // backgroundColor: "#20A7A0",
+                        // borderColor: "#20A7A0",
+                      }
+                    }
                   >
                     Sign In
                   </Button>

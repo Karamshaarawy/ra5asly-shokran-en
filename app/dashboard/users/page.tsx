@@ -63,18 +63,18 @@ export default function UsersPage() {
       dataIndex: "email",
       render: (_, { email }) => (email ? email : "-"),
     },
-    {
-      title: "Super User",
-      key: "superUser",
-      dataIndex: "is_superuser",
-      render: (_, { is_superuser }) => (is_superuser ? "yes" : "No"),
-    },
-    {
-      title: "Staff",
-      key: "isStaff",
-      dataIndex: "is_staff",
-      render: (_, { is_staff }) => (is_staff ? "Yes" : "No"),
-    },
+    // {
+    //   title: "Super User",
+    //   key: "superUser",
+    //   dataIndex: "is_superuser",
+    //   render: (_, { is_superuser }) => (is_superuser ? "yes" : "No"),
+    // },
+    // {
+    //   title: "Staff",
+    //   key: "isStaff",
+    //   dataIndex: "is_staff",
+    //   render: (_, { is_staff }) => (is_staff ? "Yes" : "No"),
+    // },
     {
       title: "Status",
       key: "isActive",
@@ -82,19 +82,19 @@ export default function UsersPage() {
       render: (_, { is_active }) => (is_active ? "Active" : "InActive"),
     },
     // { title: "Password", key: "password", dataIndex: "password" },
-    {
-      title: "Last Login",
-      key: "lastLogin",
-      dataIndex: "last_login",
-      render: (_, { last_login }) =>
-        last_login
-          ? new Date(last_login).toLocaleString("en", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })
-          : "-",
-    },
+    // {
+    //   title: "Last Login",
+    //   key: "lastLogin",
+    //   dataIndex: "last_login",
+    //   render: (_, { last_login }) =>
+    //     last_login
+    //       ? new Date(last_login).toLocaleString("en", {
+    //           year: "numeric",
+    //           month: "short",
+    //           day: "numeric",
+    //         })
+    //       : "-",
+    // },
     {
       title: "Joind At",
       key: "dateJoined",
@@ -108,45 +108,45 @@ export default function UsersPage() {
             })
           : "-",
     },
-    {
-      title: "Created At",
-      key: "createdAt",
-      dataIndex: "created_at",
-      render: (_, { created_at }) =>
-        created_at
-          ? new Date(created_at).toLocaleString("en", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })
-          : "-",
-    },
-    {
-      title: "Updated At",
-      key: "updatedAt",
-      dataIndex: "updated_at",
-      render: (_, { updated_at }) =>
-        updated_at
-          ? new Date(updated_at).toLocaleString("en", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })
-          : "-",
-    },
-    {
-      title: "Groups",
-      key: "groups",
-      dataIndex: "groups",
-      render: (_, { groups }) => (groups.length > 0 ? groups : "-"),
-    },
-    {
-      title: "Permissions",
-      key: "userPermission",
-      dataIndex: "user_permissions",
-      render: (_, { user_permissions }) =>
-        user_permissions.length > 0 ? user_permissions : "-",
-    },
+    // {
+    //   title: "Created At",
+    //   key: "createdAt",
+    //   dataIndex: "created_at",
+    //   render: (_, { created_at }) =>
+    //     created_at
+    //       ? new Date(created_at).toLocaleString("en", {
+    //           year: "numeric",
+    //           month: "short",
+    //           day: "numeric",
+    //         })
+    //       : "-",
+    // },
+    // {
+    //   title: "Updated At",
+    //   key: "updatedAt",
+    //   dataIndex: "updated_at",
+    //   render: (_, { updated_at }) =>
+    //     updated_at
+    //       ? new Date(updated_at).toLocaleString("en", {
+    //           year: "numeric",
+    //           month: "short",
+    //           day: "numeric",
+    //         })
+    //       : "-",
+    // },
+    // {
+    //   title: "Groups",
+    //   key: "groups",
+    //   dataIndex: "groups",
+    //   render: (_, { groups }) => (groups.length > 0 ? groups : "-"),
+    // },
+    // {
+    //   title: "Permissions",
+    //   key: "userPermission",
+    //   dataIndex: "user_permissions",
+    //   render: (_, { user_permissions }) =>
+    //     user_permissions.length > 0 ? user_permissions : "-",
+    // },
     {
       title: "Edit",
       key: "edit",
@@ -226,7 +226,6 @@ export default function UsersPage() {
   }
 
   function editRowHandler(record: any) {
-    console.log(record);
     setIsModalOpen(true);
     userForm.setFieldsValue({
       name: record.name,
@@ -521,7 +520,7 @@ function Search(props: any) {
       {/* <Form.Item className="w-[100%]" name="date">
         <RangePicker className="h-[50px]" format={"MM-DD-YYYY"} />
       </Form.Item> */}
-      <Form.Item name="is_active" className="w-[100%]">
+      {/* <Form.Item name="is_active" className="w-[100%]">
         <Select placeholder="Status" className="h-[50px]">
           <Select.Option key="active" value="true">
             Active
@@ -530,9 +529,9 @@ function Search(props: any) {
             InActive
           </Select.Option>
         </Select>
-      </Form.Item>
+      </Form.Item> */}
 
-      <Form.Item className="w-[100%]" name="is_staff">
+      {/* <Form.Item className="w-[100%]" name="is_staff">
         <Select placeholder="Staff" className="h-[50px]">
           <Select.Option key="yes" value="true">
             Yes
@@ -541,7 +540,7 @@ function Search(props: any) {
             No
           </Select.Option>
         </Select>
-      </Form.Item>
+      </Form.Item> */}
       {/* <Form.Item className="w-[100%]" name="installment">
         <Select placeholder="Installment" className="h-[50px]">
           <Select.Option key="yes" value="true">
