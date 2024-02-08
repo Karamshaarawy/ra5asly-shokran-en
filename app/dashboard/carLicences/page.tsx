@@ -229,7 +229,7 @@ export default function CarLicenses() {
 
   return (
     <div>
-      <div>
+      <div className="bg-[#f1f5f9] border rounded-lg shadow-sm p-5">
         <div>
           <h3 className="flex justify-start py-5 text-black text-left w-full text-3xl font-bold">
             Car Licenses
