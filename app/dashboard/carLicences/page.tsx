@@ -269,8 +269,7 @@ export default function CarLicenses() {
         message.success("Updated Successfully");
         setIsLoading(false);
         getData("");
-        setIsEditModalOpen(false);
-        setId("");
+        closeModal();
       } else {
         setIsLoading(false);
         for (let key in res) {
