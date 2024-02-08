@@ -12,7 +12,7 @@ export default function LoginPage() {
     if (typeof window !== "undefined") {
       const isAuth = localStorage.getItem("currentUser");
       if (isAuth !== null) {
-        router.push("/dashboard");
+        router.push("/dashboard/carLicences");
       }
     }
   }, [router]);
