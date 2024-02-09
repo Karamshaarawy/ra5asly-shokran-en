@@ -33,8 +33,7 @@ export default function CarLicenses() {
     {
       title: "User",
       key: "user",
-      dataIndex: "user",
-      render: (_, { user }) => (user ? user : "-"),
+      dataIndex: ["user", "name"],
     },
     {
       title: "Created At",
@@ -100,15 +99,13 @@ export default function CarLicenses() {
     {
       title: "VIP Assistance",
       key: "vip_assistance",
-      dataIndex: "vip_assistance",
       render: (_, { vip_assistance }) =>
-        vip_assistance ? vip_assistance : "-",
+        vip_assistance === true ? "Yes" : "No",
     },
     {
       title: "Installment",
       key: "installment",
-      dataIndex: "installment",
-      render: (_, installment) => (installment === true ? "Yes" : "No"),
+      render: (_, { installment }) => (installment === true ? "Yes" : "No"),
     },
     {
       title: "New Car",
@@ -174,25 +171,21 @@ export default function CarLicenses() {
       title: "Licensing Unit",
       key: "licensing_unit",
       dataIndex: ["licensing_unit", "name"],
-      render: (_, { name }) => (name ? name : "-"),
     },
     {
       title: "Notes",
       key: "notes",
       dataIndex: "notes",
-      render: (_, { notes }) => (notes ? notes : "-"),
     },
     {
       title: "Rating",
       key: "rating",
       dataIndex: ["rating", "rating"],
-      render: (_, { rating }) => (rating ? rating : "-"),
     },
     {
       title: "Rating Comment",
       key: "rating",
       dataIndex: ["rating", "comment"],
-      render: (_, { comment }) => (comment ? comment : "-"),
     },
     {
       title: "Edit",

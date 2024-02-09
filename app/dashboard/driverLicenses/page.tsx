@@ -155,13 +155,11 @@ export default function DriverLicenses() {
       title: "Rating",
       key: "rating",
       dataIndex: ["rating", "rating"],
-      render: (_, { rating }) => (rating ? rating : "-"),
     },
     {
       title: "Rating Comment",
       key: "rating",
       dataIndex: ["rating", "comment"],
-      render: (_, { comment }) => (comment ? comment : "-"),
     },
     {
       title: "Notes",
