@@ -411,7 +411,7 @@ function Search(props: any) {
     searchForm.resetFields();
     params.forEach((value, key) => params.delete(`${key}`));
     replace(`${pathname}`);
-    getData(params);
+    getData("");
   };
 
   function onFinish(values: any) {

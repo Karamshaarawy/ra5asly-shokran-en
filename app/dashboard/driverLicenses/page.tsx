@@ -383,10 +383,12 @@ function Search(props: any) {
   const { RangePicker } = DatePicker;
 
   const onReset = () => {
+    params.forEach((value, key) => {
+      params.delete(`${key}`);
+    });
     searchForm.resetFields();
-    params.forEach((value, key) => params.delete(`${key}`));
     replace(`${pathname}`);
-    getData(params);
+    getData("");
   };
 
   function onFinish(values: any) {
