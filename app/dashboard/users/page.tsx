@@ -240,12 +240,9 @@ export default function UsersPage() {
       last_name: record.last_name,
       email: record.email,
       phone: record.phone,
-      password: record.password,
       is_superuser: record.is_superuser,
       is_staff: record.is_staff,
       is_active: record.is_active,
-      groups: record.groups,
-      user_permission: record.user_permission,
     });
     setEdit(true);
     setId(record.id);
@@ -400,13 +397,17 @@ export default function UsersPage() {
                 <Input placeholder="Phone" />
               </Form.Item>
 
-              <Form.Item
-                label="Password:"
-                name="password"
-                rules={[{ required: !edit }]}
-              >
-                <Input.Password placeholder="password" />
-              </Form.Item>
+              {!edit ? (
+                <Form.Item
+                  label="Password:"
+                  name="password"
+                  rules={[{ required: !edit }]}
+                >
+                  <Input.Password placeholder="password" />
+                </Form.Item>
+              ) : (
+                <></>
+              )}
             </div>
             <div className="grid grid-cols-3">
               <Form.Item
