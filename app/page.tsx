@@ -23,7 +23,7 @@ export default function Home() {
       );
       const isAuth = currentUser?.access;
       if (isAuth) {
-        router.push("/dashboard");
+        router.push("/dashboard/carLicences");
       } else {
         localStorage.clear();
         router.push("/auth/login");
