@@ -90,9 +90,12 @@ export default function Govs() {
         getGovsList();
       } else {
         setIsLoading(false);
-        res?.errors?.forEach((err: any) => {
-          message.error(`${err?.attr + ":" + err?.detail} `);
-        });
+        for (let key in res) {
+          message.open({
+            type: "error",
+            content: res[key][0],
+          });
+        }
       }
     });
   }
@@ -184,9 +187,12 @@ export default function Govs() {
         getGovsList();
       } else {
         setIsLoading(false);
-        res?.errors?.forEach((err: any) => {
-          message.error(`${err?.attr + ":" + err?.detail} `);
-        });
+        for (let key in res) {
+          message.open({
+            type: "error",
+            content: res[key][0],
+          });
+        }
       }
     });
   }
@@ -219,9 +225,12 @@ export default function Govs() {
           getGovsList();
         } else {
           setIsLoading(false);
-          res?.errors?.forEach((err: any) => {
-            message.error(`${err?.attr + ":" + err?.detail} `);
-          });
+          for (let key in res) {
+            message.open({
+              type: "error",
+              content: res[key][0],
+            });
+          }
         }
       });
     } else {
@@ -233,9 +242,12 @@ export default function Govs() {
           getGovsList();
         } else {
           setIsLoading(false);
-          res?.errors?.forEach((err: any) => {
-            message.error(`${err?.attr + ":" + err?.detail} `);
-          });
+          for (let key in res) {
+            message.open({
+              type: "error",
+              content: res[key][0],
+            });
+          }
         }
       });
     }
@@ -254,9 +266,12 @@ export default function Govs() {
           getGovsList();
         } else {
           setIsLoading(false);
-          res?.errors?.forEach((err: any) => {
-            message.error(`${err?.attr + ":" + err?.detail} `);
-          });
+          for (let key in res) {
+            message.open({
+              type: "error",
+              content: res[key][0],
+            });
+          }
         }
       });
     } else {
@@ -268,9 +283,12 @@ export default function Govs() {
           getGovsList();
         } else {
           setIsLoading(false);
-          res?.errors?.forEach((err: any) => {
-            message.error(`${err?.attr + ":" + err?.detail} `);
-          });
+          for (let key in res) {
+            message.open({
+              type: "error",
+              content: res[key][0],
+            });
+          }
         }
       });
     }
@@ -291,9 +309,12 @@ export default function Govs() {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        res?.errors?.forEach((err: any) => {
-          message.error(`${err?.attr + ":" + err?.detail} `);
-        });
+        for (let key in res) {
+          message.open({
+            type: "error",
+            content: res[key][0],
+          });
+        }
       }
     });
   }
@@ -326,6 +347,7 @@ export default function Govs() {
       <div>
         <div className="w-full max-h-screen overflow-x-scroll lg:overflow-x-auto md:overflow-x-scroll sm:overflow-x-scroll">
           <Table
+            pagination={{ position: ["none", "none"] }}
             scroll={{ x: 0 }}
             rowKey={"id"}
             columns={columns}
@@ -333,6 +355,7 @@ export default function Govs() {
             expandable={{
               expandedRowRender: (record) => (
                 <Table
+                  pagination={{ position: ["none", "none"] }}
                   className=" p-5"
                   scroll={{ x: 0 }}
                   rowKey={"id"}

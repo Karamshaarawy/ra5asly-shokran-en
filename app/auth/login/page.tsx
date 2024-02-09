@@ -112,7 +112,7 @@ export default function LoginPage() {
             </Form>
           </div>
         </div>
-        <div className="relative hidden md:flex flex-auto items-center justify-center w-1/4 h-full p-16 lg:px-28 overflow-hidden bg-no-repeat bg-center  bg-contain bg-[url('/images/log-in-bg.png')] dark:border-l"></div>
+        <div className="relative hidden md:flex flex-auto items-center justify-center w-1/4 h-full p-16 lg:px-28 overflow-hidden bg-no-repeat bg-center bg-[url('/images/log-in-bg.png')] dark:border-l"></div>
       </div>
     </div>
   );

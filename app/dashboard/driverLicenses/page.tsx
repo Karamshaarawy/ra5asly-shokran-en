@@ -2,7 +2,7 @@
 import { Modal } from "antd";
 import { DeleteReq, GetReq, PatchReq } from "../../api/api";
 import { StatusSuccessCodes } from "../../api/successStatus";
-import { DatePicker } from "antd/lib";
+import { DatePicker, Rate, Tooltip } from "antd/lib";
 import {
   Popconfirm,
   message,
@@ -16,8 +16,9 @@ import Table, { ColumnsType } from "antd/lib/table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa6";
-import { MdModeEditOutline } from "react-icons/md";
+import { MdModeEditOutline, MdOutlineStarRate } from "react-icons/md";
 import TextArea from "antd/lib/input/TextArea";
+import { FcRating } from "react-icons/fc";
 
 export default function DriverLicenses() {
   const [id, setId] = useState<any>("");
@@ -71,11 +72,11 @@ export default function DriverLicenses() {
       render: (_, { status }) => (status ? status.replace("_", " ") : "-"),
     },
 
-    {
-      title: "Renewal Duration",
-      key: "renewal_duration",
-      dataIndex: "renewal_duration",
-    },
+    // {
+    //   title: "Renewal Duration",
+    //   key: "renewal_duration",
+    //   dataIndex: "renewal_duration",
+    // },
     {
       title: "Visit Date",
       key: "visit_date",
@@ -93,6 +94,7 @@ export default function DriverLicenses() {
       title: "Visit Slot",
       key: "visit_slot",
       dataIndex: "visit_slot",
+      render: (_, { visit_slot }) => (visit_slot ? visit_slot : "-"),
     },
     {
       title: "VIP",
@@ -109,32 +111,39 @@ export default function DriverLicenses() {
       title: "License Image",
       key: "license_id_image",
       dataIndex: "license_id_image",
-      render: (_, record) => (
-        <Image
-          alt="License Image"
-          width={70}
-          src={record.license_id_image}
-          fallback="/images/no-preview.jpeg"
-        />
-      ),
+      render: (_, record) =>
+        record.license_id_image ? (
+          <Image
+            alt="License Image"
+            width={70}
+            src={record.license_id_image}
+            fallback="/images/no-preview.jpeg"
+          />
+        ) : (
+          "-"
+        ),
     },
     {
       title: "National Id Image",
       key: "national_id_image",
       dataIndex: "national_id_image",
-      render: (_, record) => (
-        <Image
-          alt="National Id Image"
-          width={70}
-          src={record.national_id_image}
-          fallback="/images/no-preview.jpeg"
-        />
-      ),
+      render: (_, record) =>
+        record.national_id_image ? (
+          <Image
+            alt="National Id Image"
+            width={70}
+            src={record.national_id_image}
+            fallback="/images/no-preview.jpeg"
+          />
+        ) : (
+          "-"
+        ),
     },
     {
       title: "Price",
       key: "price",
       dataIndex: "price",
+      render: (_, { price }) => (price ? price : "-"),
     },
     {
       title: "Licensing Unit",
@@ -145,12 +154,20 @@ export default function DriverLicenses() {
     {
       title: "Rating",
       key: "rating",
-      dataIndex: "rating",
+      dataIndex: ["rating", "rating"],
+      render: (_, { rating }) => (rating ? rating : "-"),
+    },
+    {
+      title: "Rating Comment",
+      key: "rating",
+      dataIndex: ["rating", "comment"],
+      render: (_, { comment }) => (comment ? comment : "-"),
     },
     {
       title: "Notes",
       key: "notes",
       dataIndex: "notes",
+      render: (_, { notes }) => (notes ? notes : "-"),
     },
     {
       title: "Edit",
@@ -203,9 +220,12 @@ export default function DriverLicenses() {
         message.success("Record Deleted Successfully");
       } else {
         setIsLoading(false);
-        res?.errors?.forEach((err: any) => {
-          message.error(`${err?.attr + ":" + err?.detail} `);
-        });
+        for (let key in res) {
+          message.open({
+            type: "error",
+            content: res[key][0],
+          });
+        }
       }
     });
   }

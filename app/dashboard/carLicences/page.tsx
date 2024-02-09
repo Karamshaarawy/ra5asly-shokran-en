@@ -12,6 +12,8 @@ import {
   Select,
   Input,
   Modal,
+  Tooltip,
+  Rate,
 } from "antd/lib";
 import Table, { ColumnsType } from "antd/lib/table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -93,11 +95,14 @@ export default function CarLicenses() {
       title: "Visit Slot",
       key: "visit_slot",
       dataIndex: "visit_slot",
+      render: (_, { visit_slot }) => (visit_slot ? visit_slot : "-"),
     },
     {
       title: "VIP Assistance",
       key: "vip_assistance",
       dataIndex: "vip_assistance",
+      render: (_, { vip_assistance }) =>
+        vip_assistance ? vip_assistance : "-",
     },
     {
       title: "Installment",
@@ -115,60 +120,79 @@ export default function CarLicenses() {
       title: "Contract Image",
       key: "contract",
       dataIndex: "contract",
-      render: (_, record) => (
-        <Image
-          alt="Contract Image"
-          width={70}
-          src={record.license_id_image}
-          fallback="/images/no-preview.jpeg"
-        />
-      ),
+      render: (_, record) =>
+        record.contract ? (
+          <Image
+            alt="Contract Image"
+            width={70}
+            src={record.license_id_image}
+            fallback="/images/no-preview.jpeg"
+          />
+        ) : (
+          "-"
+        ),
     },
     {
       title: "License Image",
       key: "license_id_image",
       dataIndex: "license_id_image",
-      render: (_, record) => (
-        <Image
-          alt="License Image"
-          width={70}
-          src={record.license_id_image}
-          fallback="/images/no-preview.jpeg"
-        />
-      ),
+      render: (_, record) =>
+        record.license_id_image ? (
+          <Image
+            alt="License Image"
+            width={70}
+            src={record.license_id_image}
+            fallback="/images/no-preview.jpeg"
+          />
+        ) : (
+          "-"
+        ),
     },
     {
       title: "National Id Image",
       key: "national_id_image",
       dataIndex: "national_id_image",
-      render: (_, record) => (
-        <Image
-          alt="National Id Image"
-          width={70}
-          src={record.national_id_image}
-          fallback="/images/no-preview.jpeg"
-        />
-      ),
+      render: (_, record) =>
+        record.national_id_image ? (
+          <Image
+            alt="National Id Image"
+            width={70}
+            src={record.national_id_image}
+            fallback="/images/no-preview.jpeg"
+          />
+        ) : (
+          "-"
+        ),
     },
     {
       title: "Price",
       key: "price",
       dataIndex: "price",
+      render: (_, { price }) => (price ? price : "-"),
     },
     {
       title: "Licensing Unit",
       key: "licensing_unit",
       dataIndex: ["licensing_unit", "name"],
+      render: (_, { name }) => (name ? name : "-"),
     },
     {
       title: "Notes",
       key: "notes",
       dataIndex: "notes",
+      render: (_, { notes }) => (notes ? notes : "-"),
     },
     {
       title: "Rating",
       key: "rating",
-      dataIndex: "rating",
+      dataIndex: ["rating", "rating"],
+      render: (_, { rating }) => (rating ? rating : "-"),
+    },
+    {
+      title: "Rating Comment",
+      key: "rating",
+      dataIndex: ["rating", "comment"],
+      render: (_, { comment }) => (comment ? comment : "-"),
     },
     {
       title: "Edit",
@@ -221,9 +245,12 @@ export default function CarLicenses() {
         message.success("Record Deleted Successfully");
       } else {
         setIsLoading(false);
-        res?.errors?.forEach((err: any) => {
-          message.error(`${err?.attr + ":" + err?.detail} `);
-        });
+        for (let key in res) {
+          message.open({
+            type: "error",
+            content: res[key][0],
+          });
+        }
       }
     });
   }

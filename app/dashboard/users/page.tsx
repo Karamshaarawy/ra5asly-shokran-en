@@ -203,9 +203,12 @@ export default function UsersPage() {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        res?.errors?.forEach((err: any) => {
-          message.error(`${err?.attr + ":" + err?.detail} `);
-        });
+        for (let key in res) {
+          message.open({
+            type: "error",
+            content: res[key][0],
+          });
+        }
       }
     });
   }
@@ -218,9 +221,12 @@ export default function UsersPage() {
         message.success("Record Deleted Successfully");
       } else {
         setIsLoading(false);
-        res?.errors?.forEach((err: any) => {
-          message.error(`${err?.attr + ":" + err?.detail} `);
-        });
+        for (let key in res) {
+          message.open({
+            type: "error",
+            content: res[key][0],
+          });
+        }
       }
     });
   }
@@ -262,9 +268,12 @@ export default function UsersPage() {
           getUsersList("");
         } else {
           setIsLoading(false);
-          res?.errors?.forEach((err: any) => {
-            message.error(`${err?.attr + ":" + err?.detail} `);
-          });
+          for (let key in res) {
+            message.open({
+              type: "error",
+              content: res[key][0],
+            });
+          }
         }
       });
     } else {
@@ -276,9 +285,12 @@ export default function UsersPage() {
           setIsModalOpen(false);
         } else {
           setIsLoading(false);
-          res?.errors?.forEach((err: any) => {
-            message.error(`${err?.attr + ":" + err?.detail} `);
-          });
+          for (let key in res) {
+            message.open({
+              type: "error",
+              content: res[key][0],
+            });
+          }
         }
       });
     }
@@ -360,7 +372,7 @@ export default function UsersPage() {
               <Form.Item
                 name="email"
                 label="Email:"
-                rules={[{ required: true }]}
+                rules={[{ required: true }, { type: "email" }]}
               >
                 <Input placeholder="Email" />
               </Form.Item>
@@ -368,7 +380,22 @@ export default function UsersPage() {
               <Form.Item
                 name="phone"
                 label="Phone:"
-                rules={[{ required: true }]}
+                rules={[
+                  { required: true },
+                  {
+                    validator(_, value) {
+                      const regex = /^\+\d{12}$/;
+
+                      if (regex.test(value)) {
+                        return Promise.resolve();
+                      } else {
+                        return Promise.reject(
+                          "Enter a valid phone number that starts with +201"
+                        );
+                      }
+                    },
+                  },
+                ]}
               >
                 <Input placeholder="Phone" />
               </Form.Item>
