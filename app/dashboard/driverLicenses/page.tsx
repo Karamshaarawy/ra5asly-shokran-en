@@ -340,7 +340,12 @@ export default function DriverLicenses() {
             </Form.Item>
 
             <Form.Item name="price" label="price:" rules={[{ required: true }]}>
-              <Input className="h-[50px]" placeholder="price" type="number" />
+              <Input
+                className="h-[50px]"
+                placeholder="price"
+                min={0}
+                type="number"
+              />
             </Form.Item>
           </div>
           <Form.Item name="notes" label="Notes:">
