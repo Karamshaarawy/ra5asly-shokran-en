@@ -403,7 +403,7 @@ export default function UsersPage() {
               <Form.Item
                 label="Password:"
                 name="password"
-                rules={[{ required: true }]}
+                rules={[{ required: !edit }]}
               >
                 <Input.Password placeholder="password" />
               </Form.Item>
