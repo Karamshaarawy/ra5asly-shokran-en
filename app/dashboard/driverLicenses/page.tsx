@@ -401,8 +401,8 @@ export default function DriverLicenses() {
               <Select.Option key="REJECTED" value="REJECTED">
                 Rejected
               </Select.Option>
-              <Select.Option key="CANCELLED" value="CANCELLED">
-                Cancelled
+              <Select.Option key="CANCELED" value="CANCELED">
+                CANCELED
               </Select.Option>
             </Select>
           </Form.Item>
@@ -507,8 +507,8 @@ export default function DriverLicenses() {
                 <Select.Option key="REJECTED" value="REJECTED">
                   Rejected
                 </Select.Option>
-                <Select.Option key="CANCELLED" value="CANCELLED">
-                  Cancelled
+                <Select.Option key="CANCELED" value="CANCELED">
+                  CANCELED
                 </Select.Option>
               </Select>
             </Form.Item>
@@ -665,8 +665,8 @@ function Search(props: any) {
           <Select.Option key="REJECTED" value="REJECTED">
             Rejected
           </Select.Option>
-          <Select.Option key="CANCELLED" value="CANCELLED">
-            Cancelled
+          <Select.Option key="CANCELED" value="CANCELED">
+            CANCELED
           </Select.Option>
         </Select>
       </Form.Item>
