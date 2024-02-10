@@ -21,6 +21,9 @@ import TextArea from "antd/lib/input/TextArea";
 import { FcRating } from "react-icons/fc";
 
 export default function DriverLicenses() {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
+
   const searchParams = useSearchParams();
   const [searchForm] = Form.useForm();
   const params = new URLSearchParams(searchParams);
@@ -213,6 +216,7 @@ export default function DriverLicenses() {
       if (StatusSuccessCodes.includes(res.status)) {
         setIsLoading(false);
         message.success("Record Deleted Successfully");
+        getData(currentPage);
       } else {
         setIsLoading(false);
         for (let key in res) {
@@ -228,16 +232,17 @@ export default function DriverLicenses() {
     getData();
   }, []);
 
-  function getData(values: any = "") {
-    let url = `driver-license/?`;
-    if (typeof values !== "string") {
-      values.forEach((value: any, key: any) => (url += `&${key}=${value}`));
-    }
+  function getData(page: number = 1, pageSize: number = 10) {
+    let url = `driver-license/?limit=${pageSize}&offset=${
+      (page - 1) * pageSize
+    }`;
+    params.forEach((value: any, key: any) => (url += `&${key}=${value}`));
     setIsLoading(true);
     GetReq(url).then((res) => {
       if (StatusSuccessCodes.includes(res?.status)) {
         setData(res?.data?.results);
         setIsLoading(false);
+        setTotalItems(res?.data.count);
       } else {
         setIsLoading(false);
         for (let key in res) {
@@ -265,7 +270,7 @@ export default function DriverLicenses() {
       if (StatusSuccessCodes.includes(res?.status)) {
         message.success("Updated Successfully");
         setIsLoading(false);
-        getData();
+        getData(currentPage);
         closeModal();
       } else {
         setIsLoading(false);
@@ -334,7 +339,7 @@ export default function DriverLicenses() {
     }
 
     replace(`${pathname}?${params.toString()}`);
-    getData(params);
+    getData();
   }
 
   return (
@@ -456,6 +461,18 @@ export default function DriverLicenses() {
             rowKey={"id"}
             columns={columns}
             dataSource={data}
+            pagination={{
+              current: currentPage,
+              total: totalItems,
+              pageSize: 10,
+              showTotal(total, range) {
+                return `${range[0]}-${range[1]} of ${total} items`;
+              },
+              onChange: (page, pageSize) => {
+                setCurrentPage(page);
+                getData(page, pageSize);
+              },
+            }}
           />
         </div>
       </div>

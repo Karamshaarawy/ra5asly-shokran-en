@@ -20,6 +20,14 @@ import { FaTrash } from "react-icons/fa";
 import { MdModeEditOutline } from "react-icons/md";
 
 export default function UsersPage() {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
+  const searchParams = useSearchParams();
+  const [searchForm] = Form.useForm();
+  const params = new URLSearchParams(searchParams);
+  const { replace } = useRouter();
+  const pathname = usePathname();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [usersList, setUsersList] = useState<any[] | []>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -129,16 +137,15 @@ export default function UsersPage() {
     getUsersList();
   }, []);
 
-  function getUsersList(values: any = "") {
-    let url = `users/?`;
-    if (typeof values !== "string") {
-      values.forEach((value: any, key: any) => (url += `&${key}=${value}`));
-    }
+  function getUsersList(page: number = 1, pageSize: number = 10) {
+    let url = `users/?limit=${pageSize}&offset=${(page - 1) * pageSize}`;
+    params.forEach((value: any, key: any) => (url += `&${key}=${value}`));
     setIsLoading(true);
     GetReq(url).then((res) => {
       if (StatusSuccessCodes.includes(res?.status)) {
         setUsersList(res?.data?.results);
         setIsLoading(false);
+        setTotalItems(res?.data.count);
       } else {
         setIsLoading(false);
         for (let key in res) {
@@ -157,6 +164,7 @@ export default function UsersPage() {
       if (StatusSuccessCodes.includes(res.status)) {
         setIsLoading(false);
         message.success("Record Deleted Successfully");
+        getUsersList(currentPage);
       } else {
         setIsLoading(false);
         for (let key in res) {
@@ -200,7 +208,7 @@ export default function UsersPage() {
           message.success("User Editted Successfully");
           setId("");
           setEdit(false);
-          getUsersList();
+          getUsersList(currentPage);
         } else {
           setIsLoading(false);
           for (let key in res) {
@@ -215,7 +223,7 @@ export default function UsersPage() {
       PostReq(`users/`, values).then((res) => {
         if (StatusSuccessCodes.includes(res.status)) {
           message.success("User Added Successfully");
-          getUsersList();
+          getUsersList(currentPage);
           setIsLoading(false);
           setIsModalOpen(false);
         } else {
@@ -240,6 +248,40 @@ export default function UsersPage() {
   function search(values: any) {
     getUsersList(values);
   }
+
+  function searchChange(event: any) {
+    if (event.target.value.length === 0) {
+      onReset();
+    }
+  }
+  const onReset = () => {
+    searchForm.resetFields();
+    params.forEach((value, key) => params.delete(`${key}`));
+    replace(`${pathname}`);
+    getUsersList();
+  };
+
+  function onFinish(values: any) {
+    if (values.search) {
+      params.set("search", values.search);
+    } else {
+      params.delete("search");
+    }
+
+    if (values.is_active) {
+      params.set("is_active", values.is_active);
+    } else {
+      params.delete("is_active");
+    }
+    if (values.is_staff) {
+      params.set("is_staff", values.is_staff);
+    } else {
+      params.delete("is_staff");
+    }
+
+    replace(`${pathname}?${params.toString()}`);
+    getUsersList();
+  }
   return (
     <Fragment>
       <div className="bg-[#f1f5f9] border rounded-lg shadow-sm p-5">
@@ -259,9 +301,67 @@ export default function UsersPage() {
             Add User
           </Button>
         </div>
-        <Suspense>
+        {/* <Suspense>
           <Search getData={search} />
-        </Suspense>
+        </Suspense> */}
+        <Form
+          form={searchForm}
+          className={
+            "gap-3 mb-5 items-baseline flex flex-col md:flex-row lg:flex-row"
+          }
+          onChange={searchChange}
+          onFinish={onFinish}
+        >
+          <Form.Item
+            name="search"
+            className="w-[100%]"
+            rules={[
+              {
+                validator(_, value) {
+                  const spaceStart = value?.startsWith(" ");
+                  const spaceEnd = value?.endsWith(" ");
+                  if (spaceStart) {
+                    return Promise.reject("Must not starts with space");
+                  } else if (spaceEnd) {
+                    return Promise.reject("Must not ended with space");
+                  } else {
+                    return Promise.resolve();
+                  }
+                },
+              },
+            ]}
+          >
+            <Input
+              type="text"
+              id="name"
+              placeholder="search . . ."
+              className="h-[50px]"
+            />
+          </Form.Item>
+
+          <div className="flex flex-row gap-5 justify-between">
+            <Button
+              size={"large"}
+              htmlType="submit"
+              shape="round"
+              style={{ background: "#f1f5f9" }}
+              className="font-semibold flex items-center "
+            >
+              Apply
+            </Button>
+            <Button
+              size={"large"}
+              type="default"
+              htmlType="button"
+              onClick={onReset}
+              shape="round"
+              style={{ background: "#f1f5f9" }}
+              className="font-semibold flex items-center "
+            >
+              Reset
+            </Button>
+          </div>
+        </Form>
         <div className="w-full max-h-screen overflow-x-scroll lg:overflow-x-auto md:overflow-x-scroll sm:overflow-x-scroll">
           <Table
             dataSource={usersList}
@@ -269,6 +369,18 @@ export default function UsersPage() {
             columns={columns}
             scroll={{ x: 0 }}
             loading={isLoading}
+            pagination={{
+              current: currentPage,
+              total: totalItems,
+              pageSize: 10,
+              showTotal(total, range) {
+                return `${range[0]}-${range[1]} of ${total} items`;
+              },
+              onChange: (page, pageSize) => {
+                setCurrentPage(page);
+                getUsersList(page, pageSize);
+              },
+            }}
           />
         </div>
         <Modal
