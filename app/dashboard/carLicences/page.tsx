@@ -248,10 +248,10 @@ export default function CarLicenses() {
     });
   }
   useEffect(() => {
-    getData("");
+    getData();
   }, []);
 
-  function getData(values: any) {
+  function getData(values: any = "") {
     let url = `car-license/?`;
     if (typeof values !== "string") {
       values.forEach((value: any, key: any) => (url += `&${key}=${value}`));
@@ -288,7 +288,7 @@ export default function CarLicenses() {
       if (StatusSuccessCodes.includes(res?.status)) {
         message.success("Updated Successfully");
         setIsLoading(false);
-        getData("");
+        getData();
         closeModal();
       } else {
         setIsLoading(false);
@@ -412,7 +412,7 @@ function Search(props: any) {
     searchForm.resetFields();
     params.forEach((value, key) => params.delete(`${key}`));
     replace(`${pathname}`);
-    getData("");
+    getData();
   };
 
   function onFinish(values: any) {

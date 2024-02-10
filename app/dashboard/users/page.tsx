@@ -126,10 +126,10 @@ export default function UsersPage() {
   ];
 
   useEffect(() => {
-    getUsersList("");
+    getUsersList();
   }, []);
 
-  function getUsersList(values: any) {
+  function getUsersList(values: any = "") {
     let url = `users/?`;
     if (typeof values !== "string") {
       values.forEach((value: any, key: any) => (url += `&${key}=${value}`));
@@ -200,7 +200,7 @@ export default function UsersPage() {
           message.success("User Editted Successfully");
           setId("");
           setEdit(false);
-          getUsersList("");
+          getUsersList();
         } else {
           setIsLoading(false);
           for (let key in res) {
@@ -215,7 +215,7 @@ export default function UsersPage() {
       PostReq(`users/`, values).then((res) => {
         if (StatusSuccessCodes.includes(res.status)) {
           message.success("User Added Successfully");
-          getUsersList("");
+          getUsersList();
           setIsLoading(false);
           setIsModalOpen(false);
         } else {
@@ -399,7 +399,7 @@ function Search(props: any) {
     searchForm.resetFields();
     params.forEach((value, key) => params.delete(`${key}`));
     replace(`${pathname}`);
-    getData("");
+    getData();
   };
 
   function onFinish(values: any) {
