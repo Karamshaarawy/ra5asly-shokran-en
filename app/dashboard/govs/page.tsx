@@ -347,10 +347,18 @@ export default function Govs() {
       <div>
         <div className="w-full max-h-screen overflow-x-scroll lg:overflow-x-auto md:overflow-x-scroll sm:overflow-x-scroll">
           <Table
+            loading={isLoading}
             scroll={{ x: 0 }}
             rowKey={"id"}
             columns={columns}
             dataSource={list}
+            pagination={{
+              total: list.length,
+              pageSize: 10,
+              showTotal(total, range) {
+                return `${range[0]}-${range[1]} of ${total} items`;
+              },
+            }}
             expandable={{
               expandedRowRender: (record) => (
                 <Table
@@ -359,6 +367,13 @@ export default function Govs() {
                   rowKey={"id"}
                   columns={nestedTableColumns}
                   dataSource={record.licensing_units}
+                  pagination={{
+                    total: record.licensing_units.length,
+                    pageSize: 10,
+                    showTotal(total, range) {
+                      return `${range[0]}-${range[1]} of ${total} items`;
+                    },
+                  }}
                 />
               ),
             }}
