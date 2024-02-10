@@ -231,7 +231,7 @@ export default function UsersPage() {
           for (let key in res) {
             message.open({
               type: "error",
-              content: res[key][0],
+              content: res[key],
             });
           }
         }
