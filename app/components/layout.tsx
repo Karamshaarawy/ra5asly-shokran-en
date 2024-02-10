@@ -34,6 +34,7 @@ import {
   MdOutlineSecurity,
 } from "react-icons/md";
 import { LuLogOut } from "react-icons/lu";
+import { RxDropdownMenu } from "react-icons/rx";
 
 interface LayoutProviderProps {
   children: React.ReactNode;
@@ -145,6 +146,7 @@ export default function AppLayout({ children }: LayoutProviderProps) {
           </Header>
           <Header className=" bg-white flex flex-row items-center h-[64px] py-[2px]">
             <Menu
+              overflowedIndicator={<RxDropdownMenu size={30} />}
               className="flex flex-row w-full"
               mode="horizontal"
               items={navBarItems}
