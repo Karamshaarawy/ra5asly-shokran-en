@@ -23,7 +23,11 @@ import { MdModeEditOutline } from "react-icons/md";
 
 export default function CarLicenses() {
   const searchParams = useSearchParams();
-
+  const [searchForm] = Form.useForm();
+  const params = new URLSearchParams(searchParams);
+  const { replace } = useRouter();
+  const pathname = usePathname();
+  const { RangePicker } = DatePicker;
   const [id, setId] = useState<any>("");
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
@@ -255,9 +259,7 @@ export default function CarLicenses() {
 
   function getData(values: any = "") {
     let url = `car-license/?`;
-    if (typeof values !== "string") {
-      values.forEach((value: any, key: any) => (url += `&${key}=${value}`));
-    }
+    params.forEach((value: any, key: any) => (url += `&${key}=${value}`));
     setIsLoading(true);
     GetReq(url).then((res) => {
       if (StatusSuccessCodes.includes(res?.status)) {
@@ -275,9 +277,9 @@ export default function CarLicenses() {
     });
   }
 
-  function search(values: any) {
-    getData(values);
-  }
+  // function search(values: any) {
+  //   getData(values);
+  // }
 
   function closeModal() {
     userForm.resetFields();
@@ -304,6 +306,75 @@ export default function CarLicenses() {
     });
   }
 
+  function searchChange(event: any) {
+    if (event.target.value.length === 0) {
+      onReset();
+    }
+  }
+  const onReset = () => {
+    params.has("search") && params.delete("search");
+    params.has("to_date") && params.delete("to_date");
+    params.has("from_date") && params.delete("from_date");
+    params.has("status") && params.delete("status");
+    params.has("needs_check") && params.delete("needs_check");
+    params.has("is_new_car") && params.delete("is_new_car");
+    params.has("vip_assistance") && params.delete("vip_assistance");
+    params.has("installment") && params.delete("installment");
+    replace(`${pathname}`);
+    searchForm.resetFields();
+
+    getData();
+  };
+
+  function onFinish(values: any) {
+    let from_date = 0;
+    let to_date = 0;
+    if (values.date) {
+      from_date = Date.parse(values.date[0]);
+      to_date = Date.parse(values.date[1]);
+      params.set("from_date", from_date.toString());
+      params.set("to_date", to_date.toString());
+    } else {
+      params.delete("from_date");
+      params.delete("to_date");
+    }
+    if (values.search) {
+      params.set("search", values.search);
+    } else {
+      params.delete("search");
+    }
+
+    if (values.status) {
+      params.set("status", values.status);
+    } else {
+      params.delete("status");
+    }
+    if (values.needs_check) {
+      params.set("needs_check", values.needs_check);
+    } else {
+      params.delete("needs_check");
+    }
+    if (values.is_new_car) {
+      params.set("is_new_car", values.is_new_car);
+    } else {
+      params.delete("is_new_car");
+    }
+    if (values.installment) {
+      params.set("installment", values.installment);
+    } else {
+      params.delete("installment");
+    }
+
+    if (values.vip_assistance) {
+      params.set("vip_assistance", values.vip_assistance);
+    } else {
+      params.delete("vip_assistance");
+    }
+
+    replace(`${pathname}?${params.toString()}`);
+    getData(params);
+  }
+
   return (
     <div>
       <div className="bg-[#f1f5f9] border rounded-lg shadow-sm p-5">
@@ -312,9 +383,131 @@ export default function CarLicenses() {
             Car Licenses
           </h3>
         </div>
-        <Suspense>
+        {/* <Suspense>
           <Search getData={search} />
-        </Suspense>
+        </Suspense> */}
+        <Form
+          form={searchForm}
+          className={
+            "gap-3 mb-5 items-baseline flex flex-col md:flex-row lg:flex-row"
+          }
+          onFinish={onFinish}
+          onChange={searchChange}
+        >
+          <Form.Item
+            name="search"
+            className="w-[100%]"
+            rules={[
+              {
+                validator(_, value) {
+                  const spaceStart = value?.startsWith(" ");
+                  const spaceEnd = value?.endsWith(" ");
+                  if (spaceStart) {
+                    return Promise.reject("Must not starts with space");
+                  } else if (spaceEnd) {
+                    return Promise.reject("Must not ended with space");
+                  } else {
+                    return Promise.resolve();
+                  }
+                },
+              },
+            ]}
+          >
+            <Input
+              type="text"
+              id="name"
+              placeholder="search . . ."
+              className="h-[50px]"
+            />
+          </Form.Item>
+          <Form.Item className="w-[100%]" name="date">
+            <RangePicker className="h-[50px]" format={"MM-DD-YYYY"} />
+          </Form.Item>
+          <Form.Item name="status" className="w-[100%]">
+            <Select placeholder="Status" className="h-[50px]">
+              <Select.Option key="WAITINGAPPROVAL" value="WAITING_APPROVAL">
+                Waiting Approval
+              </Select.Option>
+              <Select.Option key="PENDING" value="PENDING">
+                Pending
+              </Select.Option>
+              <Select.Option key="DONE" value="DONE">
+                Done
+              </Select.Option>
+              <Select.Option key="REJECTED" value="REJECTED">
+                Rejected
+              </Select.Option>
+              <Select.Option key="CANCELLED" value="CANCELLED">
+                Cancelled
+              </Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item className="w-[100%]" name="vip_assistance">
+            <Select placeholder="VIP Assistance" className="h-[50px]">
+              <Select.Option key="yes" value="true">
+                Yes
+              </Select.Option>
+              <Select.Option key="no" value="false">
+                No
+              </Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item className="w-[100%]" name="needs_check">
+            <Select placeholder="Needs Check" className="h-[50px]">
+              <Select.Option key="yes" value="true">
+                Yes
+              </Select.Option>
+              <Select.Option key="no" value="false">
+                No
+              </Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item className="w-[100%]" name="is_new_car">
+            <Select placeholder="New Car" className="h-[50px]">
+              <Select.Option key="yes" value="true">
+                Yes
+              </Select.Option>
+              <Select.Option key="no" value="false">
+                No
+              </Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item className="w-[100%]" name="installment">
+            <Select placeholder="Installment" className="h-[50px]">
+              <Select.Option key="yes" value="true">
+                Yes
+              </Select.Option>
+              <Select.Option key="no" value="false">
+                No
+              </Select.Option>
+            </Select>
+          </Form.Item>
+
+          <div className="flex flex-row gap-5 justify-between">
+            <Button
+              size={"large"}
+              htmlType="submit"
+              shape="round"
+              style={{ background: "#f1f5f9" }}
+              className="font-semibold flex items-center "
+            >
+              Apply
+            </Button>
+            <Button
+              size={"large"}
+              shape="round"
+              type="default"
+              htmlType="button"
+              onClick={onReset}
+              style={{ background: "#f1f5f9" }}
+              className="font-semibold flex items-center "
+            >
+              Reset
+            </Button>
+          </div>
+        </Form>
         <div className="w-full max-h-screen overflow-x-scroll lg:overflow-x-auto md:overflow-x-scroll sm:overflow-x-scroll">
           <Table
             loading={isLoading}
