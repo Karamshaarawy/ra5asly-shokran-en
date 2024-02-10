@@ -347,7 +347,6 @@ export default function Govs() {
       <div>
         <div className="w-full max-h-screen overflow-x-scroll lg:overflow-x-auto md:overflow-x-scroll sm:overflow-x-scroll">
           <Table
-            // pagination={{ position: ["none", "none"] }}
             scroll={{ x: 0 }}
             rowKey={"id"}
             columns={columns}
@@ -355,7 +354,6 @@ export default function Govs() {
             expandable={{
               expandedRowRender: (record) => (
                 <Table
-                  // pagination={{ position: ["none", "none"] }}
                   className=" p-5"
                   scroll={{ x: 0 }}
                   rowKey={"id"}

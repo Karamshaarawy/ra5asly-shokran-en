@@ -63,38 +63,14 @@ export default function UsersPage() {
       dataIndex: "email",
       render: (_, { email }) => (email ? email : "-"),
     },
-    // {
-    //   title: "Super User",
-    //   key: "superUser",
-    //   dataIndex: "is_superuser",
-    //   render: (_, { is_superuser }) => (is_superuser ? "yes" : "No"),
-    // },
-    // {
-    //   title: "Staff",
-    //   key: "isStaff",
-    //   dataIndex: "is_staff",
-    //   render: (_, { is_staff }) => (is_staff ? "Yes" : "No"),
-    // },
+
     {
       title: "Status",
       key: "isActive",
       dataIndex: "is_active",
       render: (_, { is_active }) => (is_active ? "Active" : "InActive"),
     },
-    // { title: "Password", key: "password", dataIndex: "password" },
-    // {
-    //   title: "Last Login",
-    //   key: "lastLogin",
-    //   dataIndex: "last_login",
-    //   render: (_, { last_login }) =>
-    //     last_login
-    //       ? new Date(last_login).toLocaleString("en", {
-    //           year: "numeric",
-    //           month: "short",
-    //           day: "numeric",
-    //         })
-    //       : "-",
-    // },
+
     {
       title: "Joind At",
       key: "dateJoined",
@@ -108,45 +84,7 @@ export default function UsersPage() {
             })
           : "-",
     },
-    // {
-    //   title: "Created At",
-    //   key: "createdAt",
-    //   dataIndex: "created_at",
-    //   render: (_, { created_at }) =>
-    //     created_at
-    //       ? new Date(created_at).toLocaleString("en", {
-    //           year: "numeric",
-    //           month: "short",
-    //           day: "numeric",
-    //         })
-    //       : "-",
-    // },
-    // {
-    //   title: "Updated At",
-    //   key: "updatedAt",
-    //   dataIndex: "updated_at",
-    //   render: (_, { updated_at }) =>
-    //     updated_at
-    //       ? new Date(updated_at).toLocaleString("en", {
-    //           year: "numeric",
-    //           month: "short",
-    //           day: "numeric",
-    //         })
-    //       : "-",
-    // },
-    // {
-    //   title: "Groups",
-    //   key: "groups",
-    //   dataIndex: "groups",
-    //   render: (_, { groups }) => (groups.length > 0 ? groups : "-"),
-    // },
-    // {
-    //   title: "Permissions",
-    //   key: "userPermission",
-    //   dataIndex: "user_permissions",
-    //   render: (_, { user_permissions }) =>
-    //     user_permissions.length > 0 ? user_permissions : "-",
-    // },
+
     {
       title: "Edit",
       key: "edit",
@@ -410,27 +348,15 @@ export default function UsersPage() {
               )}
             </div>
             <div className="grid grid-cols-3">
-              <Form.Item
-                name="is_superuser"
-                // label="Is Admin"
-                valuePropName="checked"
-              >
+              <Form.Item name="is_superuser" valuePropName="checked">
                 <Checkbox>Super User</Checkbox>
               </Form.Item>
 
-              <Form.Item
-                name="is_staff"
-                //  label="Is Staff"
-                valuePropName="checked"
-              >
+              <Form.Item name="is_staff" valuePropName="checked">
                 <Checkbox defaultChecked={false}>Staff</Checkbox>
               </Form.Item>
 
-              <Form.Item
-                name="is_active"
-                valuePropName="checked"
-                // label="Is Active"
-              >
+              <Form.Item name="is_active" valuePropName="checked">
                 <Checkbox>Active</Checkbox>
               </Form.Item>
             </div>
@@ -463,8 +389,12 @@ function Search(props: any) {
   const params = new URLSearchParams(searchParams);
   const { replace } = useRouter();
   const pathname = usePathname();
-  // const { RangePicker } = DatePicker;
 
+  function searchChange(event: any) {
+    if (event.target.value.length === 0) {
+      onReset();
+    }
+  }
   const onReset = () => {
     searchForm.resetFields();
     params.forEach((value, key) => params.delete(`${key}`));
@@ -473,17 +403,6 @@ function Search(props: any) {
   };
 
   function onFinish(values: any) {
-    // let from_date = 0;
-    // let to_date = 0;
-    // if (values.date) {
-    //   from_date = Date.parse(values.date[0]);
-    //   to_date = Date.parse(values.date[1]);
-    //   params.set("from_date", from_date.toString());
-    //   params.set("to_date", to_date.toString());
-    // } else {
-    //   params.delete("from_date");
-    //   params.delete("to_date");
-    // }
     if (values.search) {
       params.set("search", values.search);
     } else {
@@ -501,12 +420,6 @@ function Search(props: any) {
       params.delete("is_staff");
     }
 
-    // if (values.vip_assistance) {
-    //   params.set("vip_assistance", values.vip_assistance);
-    // } else {
-    //   params.delete("vip_assistance");
-    // }
-
     replace(`${pathname}?${params.toString()}`);
     getData(params);
   }
@@ -516,8 +429,8 @@ function Search(props: any) {
       className={
         "gap-3 mb-5 items-baseline flex flex-col md:flex-row lg:flex-row"
       }
+      onChange={searchChange}
       onFinish={onFinish}
-      // layout="inline"
     >
       <Form.Item
         name="search"
@@ -545,40 +458,6 @@ function Search(props: any) {
           className="h-[50px]"
         />
       </Form.Item>
-      {/* <Form.Item className="w-[100%]" name="date">
-        <RangePicker className="h-[50px]" format={"MM-DD-YYYY"} />
-      </Form.Item> */}
-      {/* <Form.Item name="is_active" className="w-[100%]">
-        <Select placeholder="Status" className="h-[50px]">
-          <Select.Option key="active" value="true">
-            Active
-          </Select.Option>
-          <Select.Option key="inactive" value="false">
-            InActive
-          </Select.Option>
-        </Select>
-      </Form.Item> */}
-
-      {/* <Form.Item className="w-[100%]" name="is_staff">
-        <Select placeholder="Staff" className="h-[50px]">
-          <Select.Option key="yes" value="true">
-            Yes
-          </Select.Option>
-          <Select.Option key="no" value="false">
-            No
-          </Select.Option>
-        </Select>
-      </Form.Item> */}
-      {/* <Form.Item className="w-[100%]" name="installment">
-        <Select placeholder="Installment" className="h-[50px]">
-          <Select.Option key="yes" value="true">
-            Yes
-          </Select.Option>
-          <Select.Option key="no" value="false">
-            No
-          </Select.Option>
-        </Select>
-      </Form.Item> */}
 
       <div className="flex flex-row gap-5 justify-between">
         <Button

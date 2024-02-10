@@ -91,12 +91,7 @@ export default function LoginPage() {
                     htmlType="submit"
                     shape="round"
                     size="large"
-                    style={
-                      {
-                        // backgroundColor: "#20A7A0",
-                        // borderColor: "#20A7A0",
-                      }
-                    }
+                    style={{}}
                   >
                     Sign In
                   </Button>

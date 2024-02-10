@@ -72,11 +72,6 @@ export default function DriverLicenses() {
       render: (_, { status }) => (status ? status.replace("_", " ") : "-"),
     },
 
-    // {
-    //   title: "Renewal Duration",
-    //   key: "renewal_duration",
-    //   dataIndex: "renewal_duration",
-    // },
     {
       title: "Visit Date",
       key: "visit_date",
@@ -383,6 +378,12 @@ function Search(props: any) {
   const pathname = usePathname();
   const { RangePicker } = DatePicker;
 
+  function searchChange(event: any) {
+    if (event.target.value.length === 0) {
+      onReset();
+    }
+  }
+
   const onReset = () => {
     params.forEach((value, key) => {
       params.delete(`${key}`);
@@ -436,8 +437,8 @@ function Search(props: any) {
       className={
         "gap-3 mb-5 items-baseline flex flex-col md:flex-row lg:flex-row"
       }
+      onChange={searchChange}
       onFinish={onFinish}
-      // layout="inline"
     >
       <Form.Item
         name="search"

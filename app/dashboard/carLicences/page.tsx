@@ -403,6 +403,11 @@ function Search(props: any) {
   const pathname = usePathname();
   const { RangePicker } = DatePicker;
 
+  function searchChange(event: any) {
+    if (event.target.value.length === 0) {
+      onReset();
+    }
+  }
   const onReset = () => {
     searchForm.resetFields();
     params.forEach((value, key) => params.delete(`${key}`));
@@ -466,7 +471,7 @@ function Search(props: any) {
         "gap-3 mb-5 items-baseline flex flex-col md:flex-row lg:flex-row"
       }
       onFinish={onFinish}
-      // layout="inline"
+      onChange={searchChange}
     >
       <Form.Item
         name="search"
