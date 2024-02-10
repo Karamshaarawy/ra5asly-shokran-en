@@ -22,8 +22,6 @@ import { FaTrash } from "react-icons/fa6";
 import { MdModeEditOutline } from "react-icons/md";
 
 export default function CarLicenses() {
-  const searchParams = useSearchParams();
-
   const [id, setId] = useState<any>("");
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
