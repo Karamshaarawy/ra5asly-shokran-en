@@ -354,6 +354,9 @@ export default function CarLicenses() {
                 <Select.Option key="REJECTED" value="REJECTED">
                   Rejected
                 </Select.Option>
+                <Select.Option key="CANCELLED" value="CANCELLED">
+                  Cancelled
+                </Select.Option>
               </Select>
             </Form.Item>
 
@@ -496,7 +499,6 @@ function Search(props: any) {
       </Form.Item>
       <Form.Item name="status" className="w-[100%]">
         <Select placeholder="Status" className="h-[50px]">
-          , PENDING, DONE, REJECTED
           <Select.Option key="WAITINGAPPROVAL" value="WAITING_APPROVAL">
             Waiting Approval
           </Select.Option>
@@ -508,6 +510,9 @@ function Search(props: any) {
           </Select.Option>
           <Select.Option key="REJECTED" value="REJECTED">
             Rejected
+          </Select.Option>
+          <Select.Option key="CANCELLED" value="CANCELLED">
+            Cancelled
           </Select.Option>
         </Select>
       </Form.Item>

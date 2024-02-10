@@ -482,6 +482,9 @@ function Search(props: any) {
           <Select.Option key="REJECTED" value="REJECTED">
             Rejected
           </Select.Option>
+          <Select.Option key="CANCELLED" value="CANCELLED">
+            Cancelled
+          </Select.Option>
         </Select>
       </Form.Item>
 
