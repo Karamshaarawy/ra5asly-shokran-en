@@ -334,6 +334,9 @@ export default function DriverLicenses() {
                 <Select.Option key="REJECTED" value="REJECTED">
                   Rejected
                 </Select.Option>
+                <Select.Option key="CANCELLED" value="CANCELLED">
+                  Cancelled
+                </Select.Option>
               </Select>
             </Form.Item>
 
